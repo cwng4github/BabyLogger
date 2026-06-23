@@ -21,12 +21,14 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "next": "^14.0.4",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "pg": "^8.11.3",
+    "@supabase/ssr": "^0.12.0",
+    "@supabase/supabase-js": "^2.108.2",
     "chart.js": "^4.4.0",
-    "react-chartjs-2": "^5.2.0"
+    "next": "^14.0.4",
+    "pg": "^8.11.3",
+    "react": "^18.2.0",
+    "react-chartjs-2": "^5.2.0",
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@types/node": "^20.10.6",
