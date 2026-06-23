@@ -791,7 +791,9 @@ const tabSections = {
 
 const switchTab = (tab) => {
   Object.keys(tabSections).forEach(key => {
-    tabSections[key].classList.toggle("hidden", key !== tab);
+    if (tabSections[key]) {
+      tabSections[key].classList.toggle("hidden", key !== tab);
+    }
   });
   tabButtons.forEach(btn => {
     const t = btn.dataset.tab;
@@ -810,11 +812,13 @@ const switchTab = (tab) => {
   }
 };
 
-tabButtons.forEach(btn => {
-  btn.addEventListener("click", () => {
-    switchTab(btn.dataset.tab);
+if (tabButtons.length > 0) {
+  tabButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      switchTab(btn.dataset.tab);
+    });
   });
-});
+}
 
 // Initialize on page load
 document.addEventListener("DOMContentLoaded", async () => {
@@ -844,46 +848,55 @@ document.addEventListener("DOMContentLoaded", async () => {
   renderPlanTimeline();
 });
 
-// Event Listeners
-saveBabyProfileBtn.addEventListener("click", async () => {
-  const birthDate = babyBirthDateInput.value;
-  if (!birthDate) {
-    alert("請輸入出生日期");
-    return;
-  }
-  
-  await saveBabyProfile(birthDate);
-  currentBirthDate = birthDate;
-  updateAgeDisplay();
-  alert("嬰兒資料已儲存");
-});
+// Event Listeners - with null checks
+if (saveBabyProfileBtn) {
+  saveBabyProfileBtn.addEventListener("click", async () => {
+    const birthDate = babyBirthDateInput.value;
+    if (!birthDate) {
+      alert("請輸入出生日期");
+      return;
+    }
+    
+    await saveBabyProfile(birthDate);
+    currentBirthDate = birthDate;
+    updateAgeDisplay();
+    alert("嬰兒資料已儲存");
+  });
+}
 
-loadReferenceBtn.addEventListener("click", () => {
-  if (!confirm("確定要載入通用預設？這會覆蓋目前參考模板。")) return;
-  currentReference = JSON.parse(JSON.stringify(genericDefaultReference));
-  renderReferenceTable();
-});
+if (loadReferenceBtn) {
+  loadReferenceBtn.addEventListener("click", () => {
+    if (!confirm("確定要載入通用預設？這會覆蓋目前參考模板。")) return;
+    currentReference = JSON.parse(JSON.stringify(genericDefaultReference));
+    renderReferenceTable();
+  });
+}
 
-reloadRefForAgeBtn.addEventListener("click", () => {
-  const months = computeMonthAge(currentBirthDate);
-  if (months == null) {
-    alert("請先設定嬰兒出生日期。");
-    return;
-  }
-  if (!confirm(`將依照目前月齡（約 ${formatAgeText(months)}）重設參考模板，會覆蓋你已修改的內容，確定繼續？`)) return;
-  currentReference = getDefaultReferenceForMonth(months);
-  renderReferenceTable();
-  currentRefMonthLabel.textContent = describeRefMonth(months);
-  currentRefFeatureLabel.textContent = getMonthFeatures(months);
-  alert("已依月齡載入新的參考模板。");
-});
+if (reloadRefForAgeBtn) {
+  reloadRefForAgeBtn.addEventListener("click", () => {
+    const months = computeMonthAge(currentBirthDate);
+    if (months == null) {
+      alert("請先設定嬰兒出生日期。");
+      return;
+    }
+    if (!confirm(`將依照目前月齡（約 ${formatAgeText(months)}）重設參考模板，會覆蓋你已修改的內容，確定繼續？`)) return;
+    currentReference = getDefaultReferenceForMonth(months);
+    renderReferenceTable();
+    currentRefMonthLabel.textContent = describeRefMonth(months);
+    currentRefFeatureLabel.textContent = getMonthFeatures(months);
+    alert("已依月齡載入新的參考模板。");
+  });
+}
 
-saveReferenceBtn.addEventListener("click", async () => {
-  await saveReferencePattern(currentReference);
-  alert("參考模板已儲存");
-});
+if (saveReferenceBtn) {
+  saveReferenceBtn.addEventListener("click", async () => {
+    await saveReferencePattern(currentReference);
+    alert("參考模板已儲存");
+  });
+}
 
-addRecordBtn.addEventListener("click", async () => {
+if (addRecordBtn) {
+  addRecordBtn.addEventListener("click", async () => {
   const date = recordDateInput.value || todayISO();
   const time = recordTimeInput.value || "";
   const feedLeft = parseInt(recordFeedLeftInput.value) || 0;
@@ -904,46 +917,59 @@ addRecordBtn.addEventListener("click", async () => {
   }
 
   const id = Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
-  await addRecord({
-    id, date, time,
-    feedLeft, feedRight, feedBreastMilk, feedFormula,
-    sleepStart, sleepEnd, poop, pee, bath, notes
+    await addRecord({
+      id, date, time,
+      feedLeft, feedRight, feedBreastMilk, feedFormula,
+      sleepStart, sleepEnd, poop, pee, bath, notes
+    });
+    await fetchData();
+    renderRecordList();
+    populateRecordDateFilter();
+    renderPlanTimeline();
+    clearRecordForm();
   });
-  await fetchData();
-  renderRecordList();
-  populateRecordDateFilter();
-  renderPlanTimeline();
-  clearRecordForm();
-});
+}
 
-clearRecordFormBtn.addEventListener("click", () => {
-  clearRecordForm();
-});
+if (clearRecordFormBtn) {
+  clearRecordFormBtn.addEventListener("click", () => {
+    clearRecordForm();
+  });
+}
 
-recordDateFilter.addEventListener("change", () => {
-  renderRecordList();
-});
+if (recordDateFilter) {
+  recordDateFilter.addEventListener("change", () => {
+    renderRecordList();
+  });
+}
 
-runForecastBtn.addEventListener("click", () => {
-  runForecast();
-  alert("已根據最近歷史記錄與月齡模板更新預測時間。");
-});
+if (runForecastBtn) {
+  runForecastBtn.addEventListener("click", () => {
+    runForecast();
+    alert("已根據最近歷史記錄與月齡模板更新預測時間。");
+  });
+}
 
-saveForecastBtn.addEventListener("click", async () => {
-  const today = todayISO();
-  const rows = getForecastTableData();
-  await saveForecast(today, rows);
-  await fetchData();
-  alert("已保存今日預測，可於 PLAN 及 CSV 匯出查看。");
-  renderPlanTimeline();
-});
+if (saveForecastBtn) {
+  saveForecastBtn.addEventListener("click", async () => {
+    const today = todayISO();
+    const rows = getForecastTableData();
+    await saveForecast(today, rows);
+    await fetchData();
+    alert("已保存今日預測，可於 PLAN 及 CSV 匯出查看。");
+    renderPlanTimeline();
+  });
+}
 
-refreshPlanBtn.addEventListener("click", () => {
-  renderPlanTimeline();
-});
+if (refreshPlanBtn) {
+  refreshPlanBtn.addEventListener("click", () => {
+    renderPlanTimeline();
+  });
+}
 
-exportCsvBtn.addEventListener("click", () => {
-  exportToCsv();
-});
+if (exportCsvBtn) {
+  exportCsvBtn.addEventListener("click", () => {
+    exportToCsv();
+  });
+}
 
 // Made with Bob
