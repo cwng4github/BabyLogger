@@ -69,7 +69,7 @@ export const referencePattern = {
     const result = await query(
       'SELECT * FROM reference_pattern ORDER BY row_index'
     );
-    return result.rows.map(r => ({
+    return result.rows.map((r: any) => ({
       time: r.time || '',
       feed: r.feed || '',
       sleepStart: r.sleep_start || '',
@@ -97,7 +97,7 @@ export const records = {
     const result = await query(
       'SELECT * FROM records ORDER BY date, time'
     );
-    return result.rows.map(r => ({
+    return result.rows.map((r: any) => ({
       id: r.id,
       date: r.date,
       time: r.time || '',
@@ -119,7 +119,7 @@ export const records = {
       'SELECT * FROM records WHERE date = $1 ORDER BY time',
       [date]
     );
-    return result.rows.map(r => ({
+    return result.rows.map((r: any) => ({
       id: r.id,
       date: r.date,
       time: r.time || '',
@@ -203,7 +203,7 @@ export const forecasts = {
       );
       result.push({
         date: forecast.date,
-        rows: rows.rows.map(r => ({
+        rows: rows.rows.map((r: any) => ({
           time: r.time || '',
           feed: r.feed || '',
           sleepStart: r.sleep_start || '',
@@ -231,7 +231,7 @@ export const forecasts = {
 
     return {
       date: forecast.date,
-      rows: rows.rows.map(r => ({
+      rows: rows.rows.map((r: any) => ({
         time: r.time || '',
         feed: r.feed || '',
         sleepStart: r.sleep_start || '',
