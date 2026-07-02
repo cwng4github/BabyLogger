@@ -113,15 +113,67 @@ export default function Home() {
           </div>
         </nav>
 
-        {/* supabase test */}
-        <ul>
-          {todos?.map((todo) => (
-            <li key={todo.id}>{todo.birth_date}</li>
-          ))}
-        </ul>
-
         {/* Main Content */}
         <main className="flex-1 overflow-y-auto px-4 pb-24 pt-3 space-y-4">
+          {/* Baby Profile Records Section */}
+          <section className="muji-card p-4 space-y-3">
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="section-title">BABY PROFILE RECORDS</div>
+                <p className="text-xs text-stone-500 mt-1">所有已儲存的嬰兒檔案記錄</p>
+              </div>
+              <i className="fa fa-user-circle-o text-stone-300 text-2xl"></i>
+            </div>
+
+            <div className="space-y-2">
+              {todos && todos.length > 0 ? (
+                <div className="overflow-x-auto">
+                  <table className="w-full text-xs text-left text-stone-700">
+                    <thead>
+                      <tr className="border-b border-stone-200">
+                        <th className="py-2 px-2 font-medium">ID</th>
+                        <th className="py-2 px-2 font-medium">出生日期</th>
+                        <th className="py-2 px-2 font-medium">建立時間</th>
+                        <th className="py-2 px-2 font-medium">更新時間</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {todos.map((profile) => (
+                        <tr key={profile.id} className="border-b border-stone-100 hover:bg-stone-50">
+                          <td className="py-2 px-2">{profile.id}</td>
+                          <td className="py-2 px-2 font-medium text-stone-800">{profile.birth_date}</td>
+                          <td className="py-2 px-2 text-stone-500">
+                            {profile.created_at ? new Date(profile.created_at).toLocaleString('zh-HK', {
+                              year: 'numeric',
+                              month: '2-digit',
+                              day: '2-digit',
+                              hour: '2-digit',
+                              minute: '2-digit'
+                            }) : '-'}
+                          </td>
+                          <td className="py-2 px-2 text-stone-500">
+                            {profile.updated_at ? new Date(profile.updated_at).toLocaleString('zh-HK', {
+                              year: 'numeric',
+                              month: '2-digit',
+                              day: '2-digit',
+                              hour: '2-digit',
+                              minute: '2-digit'
+                            }) : '-'}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              ) : (
+                <div className="text-center py-6 text-stone-400">
+                  <i className="fa fa-inbox text-3xl mb-2"></i>
+                  <p className="text-xs">尚無嬰兒檔案記錄</p>
+                </div>
+              )}
+            </div>
+          </section>
+
           {/* Baby Profile Section */}
           <section className="muji-card p-4 space-y-3">
             <div className="flex items-center justify-between">
