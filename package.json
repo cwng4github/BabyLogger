@@ -4,7 +4,7 @@
   "description": "嬰兒食瞓痾小助手 - Baby Feeding, Sleep, and Diaper Tracking Next.js App with PostgreSQL",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build && touch docs/.nojekyll",
     "start": "next start",
     "lint": "next lint",
     "db:migrate": "node scripts/migrate.js"
