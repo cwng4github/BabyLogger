@@ -1,9 +1,16 @@
 import { useEffect, useState } from 'react';
 import Head from 'next/head';
 import Script from 'next/script';
+import { createClient } from '@/utils/supabase/server';
+import { cookies } from 'next/headers';
 
-export default function Home() {
+
+export default async function Home() {
   const [mounted, setMounted] = useState(false);
+  const cookieStore = await cookies();
+  const supabase = createClient(cookieStore);
+
+  const { data: todos } = await supabase.from('baby_profile').select()
 
   useEffect(() => {
     setMounted(true);
@@ -108,6 +115,13 @@ export default function Home() {
             </button>
           </div>
         </nav>
+
+        {/* supabase test */}
+        <ul>
+          {todos?.map((todo) => (
+            <li key={todo.id}>{todo.birth_date}</li>
+          ))}
+        </ul>
 
         {/* Main Content */}
         <main className="flex-1 overflow-y-auto px-4 pb-24 pt-3 space-y-4">
